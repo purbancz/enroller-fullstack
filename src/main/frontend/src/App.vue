@@ -16,7 +16,7 @@
     	<button @click="registering=true"
     	:class="registering ? '' : 'button-outline'">Rejestruje się</button>
     	<login-form v-if="registering" @login="register($event)" button-label="Zarejestruj się" ></login-form>
-      	<login-form v-else  @login="login($event)" button-label="Zaloguj się" ></login-form>>
+      	<login-form v-else  @login="login($event)" button-label="Zaloguj się" ></login-form>
     </div>
   </div>
 </template>
@@ -43,8 +43,14 @@
                 this.authenticatedUsername = '';
             },
             register(user) {
-            	
-            }
+            	 this.$http.post('participants', user)
+            	     .then(response => {
+            	         console.log(response);
+            	     })
+            	     .catch(response => {
+            	    	 alert(response.bodyText);    
+            	     });
+            	}
         }
     };
 </script>
