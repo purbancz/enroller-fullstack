@@ -31,6 +31,7 @@
         },
         methods: {
             addNewMeeting(meeting) {
+                this.$http.post('meetings', meeting);
                 this.meetings.push(meeting);
             },
             addMeetingParticipant(meeting) {
