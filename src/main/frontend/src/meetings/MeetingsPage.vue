@@ -42,7 +42,24 @@
             },
             deleteMeeting(meeting) {
                 this.meetings.splice(this.meetings.indexOf(meeting), 1);
-            }
-        }
+            },
+            getMeetings() {
+                this.$http.get('meetings')
+                    .then(response => {this.meetings = response.body;
+                    }, response => {console.log('dupa')});
+            },
+            // getMeetingsParticipants() {
+            //     for (meeting in this.meetings) {
+            //         this.$http.get('meetings/'+meeting.id+'/participants')
+            //             then(response => {meeting.participants = response.body;
+            //         }, response => {console.log('dupa')});
+            //         console.log(meeting.participants)
+            //     }
+            // },  
+        },
+        mounted() {
+            this.getMeetings();
+            // this.getMeetingsParticipants();
+        },
     }
 </script>
