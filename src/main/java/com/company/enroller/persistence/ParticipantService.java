@@ -17,8 +17,6 @@ public class ParticipantService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     public ParticipantService() {
         connector = DatabaseConnector.getInstance();
