@@ -1,7 +1,10 @@
 package com.company.enroller.persistence;
 
 import com.company.enroller.model.Meeting;
+import com.company.enroller.model.Participant;
 import org.hibernate.Query;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -10,6 +13,9 @@ import java.util.Collection;
 public class MeetingService {
 
     DatabaseConnector connector;
+
+    @Autowired
+    ParticipantService participantService;
 
     public MeetingService() {
         connector = DatabaseConnector.getInstance();
@@ -21,5 +27,82 @@ public class MeetingService {
         return query.list();
     }
 
+    public Meeting findById(long meetingId) {
+    	return (Meeting) connector.getSession().get(Meeting.class, meetingId);
+    }
+    
+    public Meeting saveMeeting(Meeting meeting) {
+        Transaction transaction = connector.getSession().beginTransaction();
+        connector.getSession().save(meeting);
+        transaction.commit();
+        return meeting;
+    }
+
+    public void deleteMeeting(Meeting meeting) {
+        Transaction transaction = connector.getSession().beginTransaction();
+        connector.getSession().delete(meeting);
+        transaction.commit();
+    }
+    
+    public Meeting updateMeeting(Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().merge(meeting);
+		transaction.commit();
+		return meeting;
+	}
+    
+    public Collection<Participant> getEnrolled(long id) {
+		Meeting meeting = findById(id);
+		return meeting.getParticipants();
+	}
+
+    public Meeting enroll(long id, Participant participant) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		Meeting meeting = findById(id);
+		meeting.addParticipant(participant);
+		connector.getSession().merge(meeting);
+		transaction.commit();
+		return meeting;
+	}
+
+	public Meeting unenroll(long id, Participant participant) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		Meeting meeting = findById(id);
+		meeting.removeParticipant(participant);
+		connector.getSession().merge(meeting);
+		transaction.commit();
+		return meeting;
+	}
+	
+//	public List<Meeting> getAllByTitle() {
+//		List<Meeting> list = new ArrayList<Meeting>(getAll());
+//		Comparator<Meeting> compareByTitle = (Meeting m1, Meeting m2) -> m1.getTitle().compareTo(m2.getTitle());
+//		Collections.sort(list, compareByTitle);
+//		return list;
+//	}
+//
+//	public Collection<Meeting> searchByTitleAndDesc(String string) {
+//		Collection<Meeting> meetings = getAll();
+//		Collection<Meeting> searchQuery = new ArrayList<Meeting>();
+//		for (Meeting meeting : meetings) {
+//			if (meeting.getTitle().contains(string) || meeting.getDescription().contains(string)) {
+//				searchQuery.add(meeting);
+//			}
+//		}
+//		return searchQuery;
+//	}
+//	
+//	public Collection<Meeting> searchByTitleAndDesc(String string) {
+//		Collection<Meeting> meetings = getAll();
+//		Collection<Meeting> searchQuery = new ArrayList<Meeting>();
+//		for (Meeting meeting : meetings) {
+//			if (meeting.getParticipants().contains(o)) {
+//				searchQuery.add(meeting);
+//			}
+//		}
+//		return searchQuery;
+//	}
+
+	
 
 }

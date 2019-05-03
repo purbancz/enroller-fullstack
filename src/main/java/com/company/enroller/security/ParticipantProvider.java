@@ -13,15 +13,15 @@ import java.util.Collections;
 
 @Service
 public class ParticipantProvider implements UserDetailsService {
-   @Autowired
-   private ParticipantService participantService;
+    @Autowired
+    private ParticipantService participantService;
 
-   @Override
-   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       Participant participant = participantService.findByLogin(username);
-       if (participant == null) {
-           throw new UsernameNotFoundException(username);
-       }
-       return new User(participant.getLogin(), participant.getPassword(), Collections.emptyList());
-   }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Participant participant = participantService.findByLogin(username);
+        if (participant == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return new User(participant.getLogin(), participant.getPassword(), Collections.emptyList());
+    }
 }

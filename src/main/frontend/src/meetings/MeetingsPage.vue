@@ -31,17 +31,40 @@
         },
         methods: {
             addNewMeeting(meeting) {
-                this.meetings.push(meeting);
+                this.$http.post('meetings', meeting)
+                .then(response => this.meetings.push(response.body));
+                    
             },
             addMeetingParticipant(meeting) {
-                meeting.participants.push(this.username);
+                this.$http.post(`meetings/${meeting.id}/participants`, this.username)
+                    .then(response => meeting.participants.push(response.body));
+                    // this.meetings.find(m => m.id === meeting.id).participants = response.data.participants;
             },
             removeMeetingParticipant(meeting) {
-                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
+                this.$http.put(`meetings/${meeting.id}/participants`, this.username)
+                    .then(() => meeting.participants.splice(meeting.participants.indexOf(this.username), 1));
             },
             deleteMeeting(meeting) {
+                this.$http.delete(`meetings/${meeting.id}`, meeting);
                 this.meetings.splice(this.meetings.indexOf(meeting), 1);
-            }
-        }
+            },
+            getMeetings() {
+                this.$http.get('meetings')
+                    .then(response => {this.meetings = response.body;
+                    }, response => {console.log('Błąd. Kod odpowiedzi: ' + response.status)});
+            },
+            getMeetingsParticipants() {
+                for (meeting in this.meetings) {
+                    this.$http.get(`meetings/'+meeting.id+'/participants`)
+                        then(response => {meeting.participants = response.body;
+                    }, response => {console.log('dupa')});
+                    console.log(meeting.participants)
+                }
+            },  
+        },
+        mounted() {
+            this.getMeetings();
+            this.getMeetingsParticipants();
+        },
     }
 </script>
