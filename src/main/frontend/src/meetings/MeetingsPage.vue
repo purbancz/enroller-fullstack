@@ -32,34 +32,36 @@
         methods: {
             addNewMeeting(meeting) {
                 this.$http.post('meetings', meeting);
-                this.meetings.push(meeting);
+                    this.meetings.push(meeting);
             },
             addMeetingParticipant(meeting) {
-                meeting.participants.push(this.username);
+                this.$http.post(`meetings/${meeting.id}/participants`)
+                    .then(response => meeting.participants.push(response.body));
             },
             removeMeetingParticipant(meeting) {
                 meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
             },
             deleteMeeting(meeting) {
+                this.$http.delete('meetings/'+meeting.id, meeting);
                 this.meetings.splice(this.meetings.indexOf(meeting), 1);
             },
             getMeetings() {
                 this.$http.get('meetings')
                     .then(response => {this.meetings = response.body;
-                    }, response => {console.log('dupa')});
+                    }, response => {console.log('Błąd. Kod odpowiedzi: ' + response.status)});
             },
-            // getMeetingsParticipants() {
-            //     for (meeting in this.meetings) {
-            //         this.$http.get('meetings/'+meeting.id+'/participants')
-            //             then(response => {meeting.participants = response.body;
-            //         }, response => {console.log('dupa')});
-            //         console.log(meeting.participants)
-            //     }
-            // },  
+            getMeetingsParticipants() {
+                for (meeting in this.meetings) {
+                    this.$http.get('meetings/'+meeting.id+'/participants')
+                        then(response => {meeting.participants = response.body;
+                    }, response => {console.log('dupa')});
+                    console.log(meeting.participants)
+                }
+            },  
         },
         mounted() {
             this.getMeetings();
-            // this.getMeetingsParticipants();
+            this.getMeetingsParticipants();
         },
     }
 </script>
