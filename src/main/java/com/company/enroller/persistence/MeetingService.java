@@ -45,11 +45,11 @@ public class MeetingService {
     }
 
     public Participant addParticipant(Meeting meeting, String username) {
+    	Transaction transaction = connector.getSession().beginTransaction();
         Participant participant = participantService.findByLogin(username);
         meeting.addParticipant(participant);
-        Transaction transaction = connector.getSession().beginTransaction();
-        connector.getSession().save(meeting);
-        transaction.commit();
+        connector.getSession().merge(meeting);
+		transaction.commit();
         return participant;
     }
 

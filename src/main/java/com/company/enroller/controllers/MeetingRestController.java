@@ -1,15 +1,21 @@
 package com.company.enroller.controllers;
 
-import com.company.enroller.model.Meeting;
-import com.company.enroller.model.Participant;
-import com.company.enroller.persistence.MeetingService;
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
+import com.company.enroller.model.Meeting;
+import com.company.enroller.model.Participant;
+import com.company.enroller.persistence.MeetingService;
+import com.company.enroller.persistence.ParticipantService;
 
 @RestController
 @RequestMapping("/api/meetings")
@@ -17,6 +23,9 @@ public class MeetingRestController {
 
     @Autowired
     MeetingService meetingService;
+    
+    @Autowired
+	ParticipantService participantService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getMeetings() {
@@ -52,7 +61,7 @@ public class MeetingRestController {
         return new ResponseEntity<>(participant, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{meetingId}/participants/me", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{meetingId}/participants", method = RequestMethod.DELETE)
     public ResponseEntity<?> unregisterMe(@PathVariable long meetingId) {
         Meeting meeting = meetingService.findById(meetingId);
         if (meeting == null) {
