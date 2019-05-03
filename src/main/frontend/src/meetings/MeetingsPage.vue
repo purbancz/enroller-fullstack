@@ -36,11 +36,12 @@
                     
             },
             addMeetingParticipant(meeting) {
-                this.$http.post(`meetings/${meeting.id}/participants`)
+                this.$http.post(`meetings/${meeting.id}/participants`, this.username)
                     .then(response => meeting.participants.push(response.body));
+                    // this.meetings.find(m => m.id === meeting.id).participants = response.data.participants;
             },
             removeMeetingParticipant(meeting) {
-                this.$http.delete(`meetings/${meeting.id}/participants`)
+                this.$http.put(`meetings/${meeting.id}/participants`, this.username)
                     .then(() => meeting.participants.splice(meeting.participants.indexOf(this.username), 1));
             },
             deleteMeeting(meeting) {
@@ -54,7 +55,7 @@
             },
             getMeetingsParticipants() {
                 for (meeting in this.meetings) {
-                    this.$http.get('meetings/'+meeting.id+'/participants')
+                    this.$http.get(`meetings/'+meeting.id+'/participants`)
                         then(response => {meeting.participants = response.body;
                     }, response => {console.log('dupa')});
                     console.log(meeting.participants)
@@ -63,7 +64,7 @@
         },
         mounted() {
             this.getMeetings();
-            // this.getMeetingsParticipants();
+            this.getMeetingsParticipants();
         },
     }
 </script>
