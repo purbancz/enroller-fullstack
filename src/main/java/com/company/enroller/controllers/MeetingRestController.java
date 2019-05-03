@@ -1,9 +1,11 @@
 package com.company.enroller.controllers;
 
-import com.company.enroller.model.Meeting;
-import com.company.enroller.model.Participant;
-import com.company.enroller.persistence.MeetingService;
-import com.company.enroller.persistence.ParticipantService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.company.enroller.model.Meeting;
+import com.company.enroller.model.Participant;
+import com.company.enroller.persistence.MeetingService;
+import com.company.enroller.persistence.ParticipantService;
 
 @RestController
 @RequestMapping("/api/meetings")
